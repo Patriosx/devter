@@ -1,18 +1,20 @@
 import React from "react";
+import styles, { globalStyles } from "../../styles/styles";
 
-const index = ({ children }) => {
+const Layout = ({ children }) => {
   return (
-    <main>
-      {children}
+    <>
+      <div>
+        <main>{children}</main>
+      </div>
+
+      {/****** STYLES ******/}
+      <style jsx>{styles}</style>
       <style jsx global>
-        {`
-          h1 {
-            color: #0070f3;
-          }
-        `}
+        {globalStyles}
       </style>
-    </main>
+    </>
   );
 };
 
-export default index;
+export default Layout;

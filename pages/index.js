@@ -3,7 +3,21 @@ import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Link from "next/link";
 import Layout from "../components/layout";
+import Button from "../components/Button";
+import GitHub from "../components/Icons/Github";
+import { loginWithGithub } from "../components/firebase/client";
+import { useState } from "react";
 export default function Home() {
+  const [user, setUser] = useState(null);
+  const handleClick = () => {
+    loginWithGithub()
+      .then((userData) => {
+        const { username, avatar, email } = userData;
+        setUser(userData);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -13,11 +27,34 @@ export default function Home() {
       </Head>
 
       <Layout>
-        <h1 className={styles.title}>Devter</h1>
-        <nav>
-          <Link href="/timeline">Timeline</Link>
-        </nav>
+        <section>
+          <img src="NextDev.png" alt="" />
+          <h1 className={styles.title}>Connekt</h1>
+          <div>
+            {user === null && (
+              <Button onClick={handleClick}>
+                <GitHub width={24} height={24} fill="#fff" />
+                Login with Github
+              </Button>
+            )}
+          </div>
+        </section>
       </Layout>
+
+      <style jsx>{`
+        img {
+          width: 200px;
+        }
+        section {
+          height: 100%;
+          display: grid;
+          place-content: center;
+          place-items: center;
+        }
+        div {
+          margin-top: 1rem;
+        }
+      `}</style>
     </div>
   );
 }
