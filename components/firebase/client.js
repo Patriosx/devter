@@ -12,17 +12,28 @@ const firebaseConfig = {
 };
 
 initializeApp(firebaseConfig);
+const mapAuthToUser = (user) => {
+  console.log(user);
+  const { _tokenResponse } = user;
+  const { screenName, email, photoUrl } = _tokenResponse;
+  return {
+    username: screenName,
+    avatar: photoUrl,
+    email,
+  };
+};
 
 export const loginWithGithub = () => {
   const auth = getAuth();
   const githubProvider = new GithubAuthProvider();
-  return signInWithPopup(auth, githubProvider).then((user) => {
-    const { _tokenResponse } = user;
-    const { screenName, email, photoUrl } = _tokenResponse;
-    return {
-      username: screenName,
-      avatar: photoUrl,
-      email,
-    };
+  return signInWithPopup(auth, githubProvider).then((user) =>
+    mapAuthToUser(user)
+  );
+};
+export const onAuthStateChanged = (onChange) => {
+  const auth = getAuth();
+  return auth.onAuthStateChanged((user) => {
+    const normalizedUSer = mapAuthToUser(user);
+    onChange(normalizedUSer);
   });
 };

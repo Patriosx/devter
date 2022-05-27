@@ -5,10 +5,19 @@ import Link from "next/link";
 import Layout from "../components/layout";
 import Button from "../components/Button";
 import GitHub from "../components/Icons/Github";
-import { loginWithGithub } from "../components/firebase/client";
-import { useState } from "react";
+import {
+  loginWithGithub,
+  onAuthStateChanged,
+} from "../components/firebase/client";
+import { useEffect, useState } from "react";
 export default function Home() {
   const [user, setUser] = useState(null);
+
+  //Para que se guarde la sesion del usuario
+  useEffect(() => {
+    onAuthStateChanged((user) => setUser(user));
+  }, []);
+
   const handleClick = () => {
     loginWithGithub()
       .then((userData) => {
@@ -31,11 +40,16 @@ export default function Home() {
           <img src="NextDev.png" alt="" />
           <h1 className={styles.title}>Connekt</h1>
           <div>
-            {user === null && (
+            {user === null ? (
               <Button onClick={handleClick}>
                 <GitHub width={24} height={24} fill="#fff" />
                 Login with Github
               </Button>
+            ) : (
+              <div>
+                <img src={user.avatar} />
+                <strong>{user.email}</strong>
+              </div>
             )}
           </div>
         </section>

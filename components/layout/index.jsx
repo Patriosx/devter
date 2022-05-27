@@ -8,7 +8,7 @@ const Layout = ({ children }) => {
         <main>{children}</main>
       </div>
 
-      {/****** STYLES ******/}
+      {/****** STYLES: styles.js ******/}
       <style jsx>{styles}</style>
       <style jsx global>
         {globalStyles}
